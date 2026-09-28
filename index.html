@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I.ETM201 – Электроник, микроэлектроник I | Транзисторууд</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
+            background: #f5f5f5;
+            padding: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: #efefef;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #444;
+            margin: 20px 0 10px;
+        }
+
+        .text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .diagram-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .card {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .card ol {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .exercise {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .exercise p {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .exercise input,
+        .exercise select,
+        .exercise textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .exercise input:focus,
+        .exercise select:focus,
+        .exercise textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .exercise button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+            margin-top: 8px;
+        }
+
+        .exercise button:hover {
+            background: #764ba2;
+        }
+
+        .feedback {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .quiz-section {
+            background: #f0f4ff;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-q {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .quiz-opts {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-opt {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-opt:hover {
+            background: #f5f5f5;
+            border-color: #667eea;
+        }
+
+        .quiz-opt input {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .quiz-opt label {
+            cursor: pointer;
+            flex: 1;
+            margin: 0;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .score-display .score-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .score-display .score-message {
+            font-size: 16px;
+            color: #666;
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .animated {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #764ba2;
+        }
+
+        #loginOverlay {
+            position: fixed; inset: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
+        }
+        .login-box { background: #fff; border-radius: 12px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .login-box h2 { color: #333; font-size: 20px; margin-bottom: 4px; }
+        .login-box .sub { color: #666; font-size: 13px; margin-bottom: 18px; }
+        .login-box input { width: 100%; padding: 11px; margin: 6px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; font-family: inherit; }
+        .login-box input:focus { outline: none; border-color: #667eea; }
+        .login-box button { width: 100%; padding: 12px; margin-top: 10px; background: #667eea; color: #fff; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
+        .login-box button:hover { background: #764ba2; }
+        .login-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+        .login-tabs button { margin: 0; background: #eee; color: #555; }
+        .login-tabs button.active { background: #667eea; color: #fff; }
+        .login-err { color: #c0392b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+        .hint { font-size: 12px; color: #888; margin-top: 4px; }
+        .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .tbl th, .tbl td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+        .tbl th { background: #667eea; color: #fff; position: sticky; top: 0; }
+        .tbl tr:nth-child(even) { background: #f7f7ff; }
+        .tbl-wrap { max-height: 480px; overflow: auto; border: 1px solid #ddd; border-radius: 6px; }
+        .stat { display: inline-block; background: #f0f4ff; border-radius: 6px; padding: 10px 16px; margin: 4px 8px 12px 0; font-size: 14px; }
+        .stat b { color: #667eea; font-size: 20px; display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .dcard { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px; text-align: center; }
+        .dcard h4 { font-size: 14px; color: #333; margin: 8px 0 4px; }
+        .dcard p { font-size: 12px; color: #666; line-height: 1.5; }
+        .dcard svg { width: 110px; height: 60px; }
+        input[type=range] { width: 100%; }
+        .footer {
+            background: #f5f5f5;
+            padding: 15px 30px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>I.ETM201 – Электроник, микроэлектроник I</h2>
+            <div class="sub">Багш: Т.Батгэрэл M.EC21 &nbsp;·&nbsp; Транзисторууд</div>
+            <div class="login-tabs">
+                <button id="lt0" class="active" onclick="loginMode(0)">Оюутан</button>
+                <button id="lt1" onclick="loginMode(1)">Багш</button>
+            </div>
+            <div id="studentLogin">
+                <input id="stuCode" type="text" inputmode="numeric" placeholder="Оюутны код (B үсэггүй, ж: 252100006)" onkeydown="if(event.key==='Enter')studentLogin()">
+                <div class="hint">Кодоо B үсгийг хасаж зөвхөн тоогоор оруулна уу.</div>
+                <button onclick="studentLogin()">Нэвтрэх</button>
+            </div>
+            <div id="teacherLogin" style="display:none;">
+                <input id="tId" type="text" placeholder="Багшийн ID" onkeydown="if(event.key==='Enter')teacherLogin()">
+                <input id="tPass" type="password" placeholder="Нууц үг" onkeydown="if(event.key==='Enter')teacherLogin()">
+                <button onclick="teacherLogin()">Нэвтрэх</button>
+            </div>
+            <div class="login-err" id="loginErr"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <p style="font-size:13px;opacity:0.85;margin-bottom:6px;">I.ETM201 – Электроник, микроэлектроник I &nbsp;|&nbsp; Багш: Т.Батгэрэл M.EC21</p>
+            <h1>Транзисторууд</h1>
+            <p>Бүтэц, ангилал · Ажиллах зарчим · Ажлын горим · Характеристик · Тэмдэглэгээ</p>
+            <div id="userBar" style="margin-top:14px;background:rgba(255,255,255,0.15);border-radius:6px;padding:8px 12px;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span id="userInfo"></span>
+                <span>⏱ Энэ удаа: <b id="sessionTime">00:00:00</b> &nbsp;|&nbsp; Нийт: <b id="totalTime">00:00:00</b></span>
+                <button onclick="logout()" style="background:#fff;color:#667eea;border:none;border-radius:4px;padding:4px 10px;cursor:pointer;font-size:12px;">Гарах</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">Бүтэц, ангилал</button>
+            <button class="tab-btn" onclick="switchTab(1)">Ажиллах зарчим</button>
+            <button class="tab-btn" onclick="switchTab(2)">Характеристик</button>
+            <button class="tab-btn" onclick="switchTab(3)">Тэмдэглэгээ</button>
+            <button class="tab-btn" onclick="switchTab(4)">Дасгал</button>
+            <button class="tab-btn" onclick="switchTab(5)">Шалгалт</button>
+            <button class="tab-btn" id="teacherTabBtn" onclick="switchTab(6)" style="display:none;color:#d63031;">👩‍🏫 Багш</button>
+        </div>
+
+        <div class="content">
+            <!-- TAB 0 -->
+            <div class="tab-content active">
+                <div class="section">
+                    <h2>Транзистор гэж юу вэ?</h2>
+                    <p class="text">Транзистор нь гурван гаргалгатай хагас дамжуулагч элемент бөгөөд нэг гаргалгын жижиг дохиогоор нөгөө хоёрын хоорондох <b>гүйдлийг удирддаг</b>. Үндсэн хэрэглээ: <b>өсгөх</b> (analog) ба <b>түлхүүр</b> (switch, digital).</p>
+                    <div class="card">
+                        <h3>Ангилал</h3>
+                        <ol>
+                            <li><b>Биполяр (BJT):</b> хоёр p–n шилжилттэй, гүйдлээр удирдагдана. Төрөл: n-p-n, p-n-p. Гаргалга: Эмиттер (Э), Бааз (Б), Коллектор (К)</li>
+                            <li><b>Талбайн (FET):</b> хүчдэлээр удирдагдана, нэг төрлийн зөөгч (унипoляр). Гаргалга: Исток (И), Затвор (З), Сток (С)
+                                <ul style="margin-left:18px;margin-top:4px;"><li>JFET — p–n шилжилттэй затвор</li><li>MOSFET — тусгаарлагдсан (оксид) затвор; индуцирсэн / суулгасан сувагтай</li></ul></li>
+                            <li><b>Бусад:</b> IGBT (BJT+MOSFET хосолсон, чадлын), фототранзистор, Дарлингтон хос</li>
+                            <li><b>Чадлаар:</b> бага (< 0.3 Вт), дунд, их чадлын (радиатортай); <b>Давтамжаар:</b> нам, өндөр, СВЧ</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>Биполяр транзисторын бүтэц (n-p-n)</h2>
+                    <div class="diagram-box">
+                        <svg width="100%" viewBox="0 0 700 260" style="max-width:700px;height:auto;">
+                            <rect x="100" y="60" width="180" height="140" fill="#e0e0ff" stroke="#333" stroke-width="2"/>
+                            <rect x="280" y="60" width="60" height="140" fill="#ffe0e0" stroke="#333" stroke-width="2"/>
+                            <rect x="340" y="60" width="240" height="140" fill="#e0e0ff" stroke="#333" stroke-width="2"/>
+                            <text x="190" y="120" font-size="28" font-weight="bold" fill="#e74c3c" text-anchor="middle">n⁺</text>
+                            <text x="190" y="150" font-size="13" fill="#333" text-anchor="middle">Эмиттер</text>
+                            <text x="190" y="170" font-size="11" fill="#666" text-anchor="middle">их хольцтой</text>
+                            <text x="310" y="120" font-size="28" font-weight="bold" fill="#5dade2" text-anchor="middle">p</text>
+                            <text x="310" y="150" font-size="12" fill="#333" text-anchor="middle">Бааз</text>
+                            <text x="310" y="170" font-size="10" fill="#666" text-anchor="middle">нимгэн</text>
+                            <text x="460" y="120" font-size="28" font-weight="bold" fill="#e74c3c" text-anchor="middle">n</text>
+                            <text x="460" y="150" font-size="13" fill="#333" text-anchor="middle">Коллектор</text>
+                            <text x="460" y="170" font-size="11" fill="#666" text-anchor="middle">том талбайтай</text>
+                            <line x1="100" y1="130" x2="50" y2="130" stroke="#333" stroke-width="3"/><text x="40" y="135" font-size="14" font-weight="bold" fill="#27ae60" text-anchor="end">Э</text>
+                            <line x1="310" y1="60" x2="310" y2="20" stroke="#333" stroke-width="3"/><text x="310" y="15" font-size="14" font-weight="bold" fill="#667eea" text-anchor="middle">Б</text>
+                            <line x1="580" y1="130" x2="630" y2="130" stroke="#333" stroke-width="3"/><text x="640" y="135" font-size="14" font-weight="bold" fill="#e74c3c">К</text>
+                            <text x="280" y="225" font-size="12" fill="#666" text-anchor="middle">ЭБ шилжилт</text><text x="340" y="245" font-size="12" fill="#666" text-anchor="middle">БК шилжилт</text>
+                            <line x1="280" y1="205" x2="280" y2="212" stroke="#666"/><line x1="340" y1="205" x2="340" y2="232" stroke="#666"/>
+                        </svg>
+                    </div>
+                    <div class="grid" style="margin-top:12px;"><div class="dcard"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="42" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="28" x2="68" y2="10" stroke="#333" stroke-width="2.5"/><line x1="42" y1="42" x2="68" y2="60" stroke="#333" stroke-width="2.5"/><polygon points="66,50 58,40 52,46" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">Б</text><text x="72" y="12" font-size="10" fill="#e74c3c">К</text><text x="72" y="66" font-size="10" fill="#27ae60">Э</text></svg><h4>Биполяр n-p-n</h4><p>Гүйдлээр удирдагдана: I<sub>К</sub> = β·I<sub>Б</sub>. Хамгийн түгээмэл. Ж: BC547, 2N2222, КТ315.</p></div><div class="dcard"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="42" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="28" x2="68" y2="10" stroke="#333" stroke-width="2.5"/><line x1="42" y1="42" x2="68" y2="60" stroke="#333" stroke-width="2.5"/><polygon points="54,42 62,52 56,52" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">Б</text><text x="72" y="12" font-size="10" fill="#e74c3c">К</text><text x="72" y="66" font-size="10" fill="#27ae60">Э</text></svg><h4>Биполяр p-n-p</h4><p>n-p-n-ийн туйл эсрэг. Эмиттер гүйдэл дотогш. Ж: BC557, 2N2907, КТ361.</p></div><div class="dcard"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="38" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="20" x2="70" y2="20" stroke="#333" stroke-width="2.5"/><line x1="70" y1="20" x2="70" y2="8" stroke="#333" stroke-width="2.5"/><line x1="42" y1="50" x2="70" y2="50" stroke="#333" stroke-width="2.5"/><line x1="70" y1="50" x2="70" y2="62" stroke="#333" stroke-width="2.5"/><polygon points="26,35 36,30 36,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="12" font-size="10" fill="#e74c3c">С</text><text x="76" y="66" font-size="10" fill="#27ae60">И</text></svg><h4>JFET (n-суваг)</h4><p>Хүчдэлээр удирдагдана; U<sub>ЗИ</sub> < 0 сувгийг нарийсгана. Өндөр оролтын эсэргүүцэл. Ж: 2N5457, BF245.</p></div><div class="dcard"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="38" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="20" x2="70" y2="20" stroke="#333" stroke-width="2.5"/><line x1="70" y1="20" x2="70" y2="8" stroke="#333" stroke-width="2.5"/><line x1="42" y1="50" x2="70" y2="50" stroke="#333" stroke-width="2.5"/><line x1="70" y1="50" x2="70" y2="62" stroke="#333" stroke-width="2.5"/><polygon points="40,35 30,30 30,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="12" font-size="10" fill="#e74c3c">С</text><text x="76" y="66" font-size="10" fill="#27ae60">И</text></svg><h4>JFET (p-суваг)</h4><p>n-сувгийн эсрэг туйлт. Ж: 2N5460, J176.</p></div><div class="dcard"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="36" y2="35" stroke="#333" stroke-width="2.5"/><line x1="36" y1="15" x2="36" y2="55" stroke="#333" stroke-width="2.5"/><line x1="44" y1="14" x2="44" y2="24" stroke="#333" stroke-width="4"/><line x1="44" y1="30" x2="44" y2="40" stroke="#333" stroke-width="4"/><line x1="44" y1="46" x2="44" y2="56" stroke="#333" stroke-width="4"/><line x1="44" y1="19" x2="70" y2="19" stroke="#333" stroke-width="2.5"/><line x1="70" y1="19" x2="70" y2="6" stroke="#333" stroke-width="2.5"/><line x1="44" y1="51" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><line x1="70" y1="51" x2="70" y2="64" stroke="#333" stroke-width="2.5"/><line x1="44" y1="35" x2="70" y2="35" stroke="#333" stroke-width="2.5"/><line x1="70" y1="35" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><polygon points="52,35 62,30 62,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="10" font-size="10" fill="#e74c3c">С</text><text x="76" y="68" font-size="10" fill="#27ae60">И</text></svg><h4>MOSFET (n-суваг, индуцирсэн)</h4><p>Тусгаарлагдсан затвор; U<sub>ЗИ</sub> > U<sub>th</sub> үед нээгдэнэ. Чадлын электроник, тоон хэлхээ. Ж: IRF540, 2N7000.</p></div><div class="dcard"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="36" y2="35" stroke="#333" stroke-width="2.5"/><line x1="36" y1="15" x2="36" y2="55" stroke="#333" stroke-width="2.5"/><line x1="44" y1="14" x2="44" y2="24" stroke="#333" stroke-width="4"/><line x1="44" y1="30" x2="44" y2="40" stroke="#333" stroke-width="4"/><line x1="44" y1="46" x2="44" y2="56" stroke="#333" stroke-width="4"/><line x1="44" y1="19" x2="70" y2="19" stroke="#333" stroke-width="2.5"/><line x1="70" y1="19" x2="70" y2="6" stroke="#333" stroke-width="2.5"/><line x1="44" y1="51" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><line x1="70" y1="51" x2="70" y2="64" stroke="#333" stroke-width="2.5"/><line x1="44" y1="35" x2="70" y2="35" stroke="#333" stroke-width="2.5"/><line x1="70" y1="35" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><polygon points="64,35 54,30 54,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="10" font-size="10" fill="#e74c3c">С</text><text x="76" y="68" font-size="10" fill="#27ae60">И</text></svg><h4>MOSFET (p-суваг)</h4><p>n-сувгийн эсрэг туйлт; CMOS-ийн хос элемент. Ж: IRF9540, BS250.</p></div></div>
+                </div>
+            </div>
+
+            <!-- TAB 1 -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>Ажиллах зарчим (n-p-n, идэвхтэй горим)</h2>
+                    <p class="text">ЭБ шилжилтийг <b>шууд</b>, БК шилжилтийг <b>урвуу</b> хүчдэлээр холбоно. Эмиттерээс баазад цацагдсан электронуудын ихэнх (α ≈ 0.98–0.998) нь нимгэн баазыг давж коллекторын урвуу орон руу татагдана. Зөвхөн бага хэсэг нь баазын нүхтэй рекомбинацлаж бааз гүйдэл үүсгэнэ.</p>
+                    <div class="card" style="text-align:center;font-size:17px;">I<sub>Э</sub> = I<sub>К</sub> + I<sub>Б</sub>, &nbsp; I<sub>К</sub> = β·I<sub>Б</sub>, &nbsp; β = h<sub>21э</sub> = α/(1−α) ≈ 50…500</div>
+                    <div class="exercise">
+                        <p>Бааз гүйдлийг өөрчилж коллектор гүйдлийн хариу үйлдлийг ажигла:</p>
+                        <input type="range" id="ibSlider" min="0" max="100" value="40" oninput="drawBJT()">
+                        <div style="display:flex;justify-content:space-between;font-size:14px;"><span>I<sub>Б</sub> = <b id="ibVal">40</b> мкА</span><span>β = 100</span><span>I<sub>К</sub> = <b id="icVal">4.0</b> мА</span><span id="bjtMode" style="color:#667eea;font-weight:500"></span></div>
+                    </div>
+                    <div class="diagram-box" style="background:#1a1a2e;">
+                        <svg id="bjtSvg" width="100%" viewBox="0 0 700 360" style="max-width:700px;height:auto;">
+                            <defs><style>
+                                @keyframes eFlow { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+                                @keyframes bDash { to { stroke-dashoffset: -40; } }
+                                .bflow { stroke-dasharray: 6 6; animation: bDash 1s linear infinite; }
+                            </style></defs>
+                            <g font-size="11" fill="#fff"><circle cx="30" cy="20" r="4" fill="#f1c40f"/><text x="40" y="24">Электрон (e⁻)</text><circle cx="180" cy="20" r="4" fill="#5dade2"/><text x="190" y="24">Нүх (h⁺)</text></g>
+                            <rect x="100" y="60" width="160" height="180" fill="#1c2b4a" stroke="#fff" stroke-width="2"/>
+                            <rect x="260" y="60" width="60" height="180" fill="#4a1c2b" stroke="#fff" stroke-width="2"/>
+                            <rect x="320" y="60" width="240" height="180" fill="#1c2b4a" stroke="#fff" stroke-width="2"/>
+                            <text x="180" y="270" font-size="14" fill="#fff" text-anchor="middle">Эмиттер n⁺</text>
+                            <text x="290" y="270" font-size="14" fill="#fff" text-anchor="middle">Бааз p</text>
+                            <text x="440" y="270" font-size="14" fill="#fff" text-anchor="middle">Коллектор n</text>
+                            <g id="bjtCarriers"></g>
+                            <path id="wEB" d="M100 150 L60 150 L60 320 L200 320" fill="none" stroke="#e67e22" stroke-width="3"/>
+                            <path id="wB" d="M290 60 L290 30 L200 30 L200 320" fill="none" stroke="#e67e22" stroke-width="3"/>
+                            <path id="wC" d="M560 150 L620 150 L620 320 L440 320" fill="none" stroke="#e67e22" stroke-width="3"/>
+                            <g transform="translate(200,310)"><rect x="-8" y="0" width="16" height="20" fill="#3498db"/><text x="0" y="-4" font-size="11" fill="#fff" text-anchor="middle">U<tspan baseline-shift="sub" font-size="8">БЭ</tspan> +</text></g>
+                            <g transform="translate(440,310)"><rect x="-8" y="0" width="16" height="20" fill="#e84393"/><text x="0" y="-4" font-size="11" fill="#fff" text-anchor="middle">U<tspan baseline-shift="sub" font-size="8">КЭ</tspan> ++</text></g>
+                            <line x1="200" y1="320" x2="440" y2="320" stroke="#e67e22" stroke-width="3"/>
+                            <text id="bjtStatus" x="350" y="350" font-size="13" fill="#fff" text-anchor="middle"></text>
+                        </svg>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>Ажлын горимууд</h2>
+                    <div class="grid">
+                        <div class="dcard" style="border-color:#95a5a6"><h4>Таслалт (cutoff)</h4><p>ЭБ ба БК хоёулаа урвуу. I<sub>Б</sub> ≈ 0, I<sub>К</sub> ≈ 0. Түлхүүр <b>нээлттэй</b> (OFF).</p></div>
+                        <div class="dcard" style="border-color:#27ae60"><h4>Идэвхтэй (active)</h4><p>ЭБ шууд, БК урвуу. I<sub>К</sub> = β·I<sub>Б</sub>. <b>Өсгөгч</b> горим — шугаман.</p></div>
+                        <div class="dcard" style="border-color:#e74c3c"><h4>Ханалт (saturation)</h4><p>ЭБ ба БК хоёулаа шууд. U<sub>КЭ</sub> ≈ 0.1–0.3 В, I<sub>К</sub> хэлхээгээр хязгаарлагдана. Түлхүүр <b>хаалттай</b> (ON).</p></div>
+                        <div class="dcard" style="border-color:#8e44ad"><h4>Урвуу идэвхтэй</h4><p>ЭБ урвуу, БК шууд. Э ба К байрлаж солигдсон мэт; β маш бага. Ховор хэрэглэнэ.</p></div>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>MOSFET-ийн ажиллах зарчим (n-суваг, индуцирсэн)</h2>
+                    <p class="text">Затворт эерэг хүчдэл өгөхөд p-субстратын гадаргууд электронууд татагдаж <b>n-суваг индуцирлэгдэнэ</b> (U<sub>ЗИ</sub> > U<sub>th</sub>). Сувгийн эсэргүүцэл затворын хүчдэлээс хамаарна; затвороор гүйдэл урсахгүй (оролтын эсэргүүцэл ~10¹²–10¹⁴ Ом).</p>
+                    <div class="exercise">
+                        <input type="range" id="vgsSlider" min="0" max="10" step="0.1" value="1" oninput="drawMOS()">
+                        <div style="display:flex;justify-content:space-between;font-size:14px;"><span>U<sub>ЗИ</sub> = <b id="vgsVal">1.0</b> В</span><span>U<sub>th</sub> = 2 В</span><span id="mosState" style="font-weight:500"></span></div>
+                    </div>
+                    <div class="diagram-box" style="background:#1a1a2e;">
+                        <svg width="100%" viewBox="0 0 700 300" style="max-width:700px;height:auto;">
+                            <rect x="100" y="120" width="500" height="140" fill="#4a1c2b" stroke="#fff" stroke-width="2"/>
+                            <text x="350" y="245" font-size="13" fill="#fff" text-anchor="middle">p-субстрат</text>
+                            <rect x="130" y="120" width="90" height="40" fill="#1c2b4a" stroke="#fff"/><text x="175" y="145" font-size="14" fill="#fff" text-anchor="middle">n⁺</text>
+                            <rect x="480" y="120" width="90" height="40" fill="#1c2b4a" stroke="#fff"/><text x="525" y="145" font-size="14" fill="#fff" text-anchor="middle">n⁺</text>
+                            <rect x="220" y="108" width="260" height="12" fill="#95a5a6"/><text x="350" y="100" font-size="11" fill="#ccc" text-anchor="middle">SiO₂ (тусгаарлагч)</text>
+                            <rect x="230" y="80" width="240" height="20" fill="#bdc3c7"/><text x="350" y="70" font-size="12" fill="#fff" text-anchor="middle">Затвор (З)</text>
+                            <rect id="chan" x="220" y="160" width="260" height="0" fill="#f1c40f" opacity="0.7"/>
+                            <text id="chanLbl" x="350" y="185" font-size="12" fill="#f1c40f" text-anchor="middle"></text>
+                            <line x1="175" y1="120" x2="175" y2="40" stroke="#e67e22" stroke-width="3"/><text x="175" y="30" font-size="13" fill="#fff" text-anchor="middle">Исток (И)</text>
+                            <line x1="525" y1="120" x2="525" y2="40" stroke="#e67e22" stroke-width="3"/><text x="525" y="30" font-size="13" fill="#fff" text-anchor="middle">Сток (С)</text>
+                            <line x1="350" y1="80" x2="350" y2="45" stroke="#e67e22" stroke-width="3"/>
+                            <g id="mosE"></g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2 -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>Статик характеристикууд (нийтлэг эмиттерийн схем)</h2>
+                    <p class="text"><b>Оролтын:</b> I<sub>Б</sub>(U<sub>БЭ</sub>) — диодын шууд салбартай төстэй (U<sub>БЭ</sub> ≈ 0.7 В). <b>Гаралтын:</b> I<sub>К</sub>(U<sub>КЭ</sub>) — I<sub>Б</sub> = const бүрт нэг муруй. <b>Ачааллын шугам</b> ба ажлын цэг (Q) огтлолцол дээр байна.</p>
+                    <div class="exercise">
+                        <p>Бааз гүйдэл ба ачааллыг сонгож ажлын цэгийг харна уу (U<sub>тэж</sub> = 12 В, β = 100):</p>
+                        <input type="range" id="chIb" min="0" max="100" step="5" value="40" oninput="drawChar()">
+                        <input type="range" id="chRc" min="200" max="3000" step="100" value="1000" oninput="drawChar()">
+                        <div style="display:flex;justify-content:space-between;font-size:14px;flex-wrap:wrap;gap:6px;"><span>I<sub>Б</sub> = <b id="chIbV">40</b> мкА</span><span>R<sub>К</sub> = <b id="chRcV">1000</b> Ом</span><span>I<sub>К</sub> = <b id="chIcV"></b></span><span>U<sub>КЭ</sub> = <b id="chVceV"></b></span><span id="chMode" style="font-weight:500;color:#667eea"></span></div>
+                    </div>
+                    <div class="diagram-box">
+                        <svg id="chSvg" width="100%" viewBox="0 0 700 420" style="max-width:700px;height:auto;">
+                            <g id="chGrid"></g>
+                            <line x1="70" y1="380" x2="680" y2="380" stroke="#333" stroke-width="2"/><line x1="70" y1="380" x2="70" y2="20" stroke="#333" stroke-width="2"/>
+                            <text x="660" y="400" font-size="12" fill="#333">U<tspan baseline-shift="sub" font-size="9">КЭ</tspan>, В</text><text x="30" y="20" font-size="12" fill="#333">I<tspan baseline-shift="sub" font-size="9">К</tspan>, мА</text>
+                            <g id="chTicks" font-size="10" fill="#666"></g>
+                            <g id="chCurves"></g>
+                            <line id="chLoad" stroke="#e74c3c" stroke-width="2"/>
+                            <rect x="72" y="22" width="24" height="356" fill="#e74c3c" opacity="0.08"/><text x="84" y="45" font-size="9" fill="#c0392b" text-anchor="middle">ханалт</text>
+                            <circle id="chQ" r="6" fill="#f1c40f" stroke="#333" stroke-width="1.5"/><text id="chQl" font-size="12" font-weight="bold" fill="#333">Q</text>
+                        </svg>
+                    </div>
+                    <div class="card">
+                        <h3>Үндсэн параметрүүд</h3>
+                        <ol>
+                            <li><b>β (h<sub>21э</sub>)</b> — гүйдлийн өсгөлтийн коэффициент; <b>α</b> = I<sub>К</sub>/I<sub>Э</sub> ≈ 0.99</li>
+                            <li><b>U<sub>КЭ max</sub>, I<sub>К max</sub>, P<sub>К max</sub></b> — хязгаарын утгууд (ж: BC547: 45 В, 100 мА, 0.5 Вт)</li>
+                            <li><b>f<sub>T</sub></b> — өсгөлт 1 болох давтамж; <b>U<sub>КЭ нас</sub></b> — ханалтын хүчдэл (0.1–0.3 В)</li>
+                            <li><b>I<sub>КБО</sub></b> — коллекторын урвуу гүйдэл (температураас хүчтэй хамаарна)</li>
+                            <li>FET: <b>S = ΔI<sub>С</sub>/ΔU<sub>ЗИ</sub></b> — налалт (transconductance), <b>U<sub>th</sub></b> — босго хүчдэл, <b>R<sub>DS(on)</sub></b> — нээлттэй сувгийн эсэргүүцэл</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section">
+                    <h2>Гурван холболтын схем</h2>
+                    <div class="tbl-wrap" style="max-height:none;"><table class="tbl"><thead><tr><th>Схем</th><th>Оролт</th><th>Гаралт</th><th>K<sub>U</sub></th><th>K<sub>I</sub></th><th>R<sub>вх</sub></th><th>Фаз</th><th>Хэрэглээ</th></tr></thead><tbody>
+                        <tr><td><b>Нийтлэг эмиттер (НЭ)</b></td><td>Б–Э</td><td>К–Э</td><td>их</td><td>β</td><td>дунд (~1 кОм)</td><td>180°</td><td>Ерөнхий өсгөгч (хамгийн түгээмэл)</td></tr>
+                        <tr><td><b>Нийтлэг коллектор (НК)</b></td><td>Б–К</td><td>Э–К</td><td>≈ 1</td><td>β+1</td><td>их</td><td>0°</td><td>Эмиттерийн давтагч, буфер</td></tr>
+                        <tr><td><b>Нийтлэг бааз (НБ)</b></td><td>Э–Б</td><td>К–Б</td><td>их</td><td>α ≈ 1</td><td>бага</td><td>0°</td><td>Өндөр давтамжийн өсгөгч</td></tr>
+                    </tbody></table></div>
+                </div>
+            </div>
+
+            <!-- TAB 3 -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>Схемийн тэмдэглэгээ</h2>
+                    <p class="text">BJT: сумтай гаргалга — <b>эмиттер</b>; сум гадагш = n-p-n, дотогш = p-n-p ("Not Pointing iN"). FET: сум субстрат/затвор дээр; n-суваг — сум дотогш (сувгийн зүг), p-суваг — гадагш. MOSFET-ийн тасархай шугам = индуцирсэн суваг.</p>
+                    <div class="tbl-wrap" style="max-height:none;"><table class="tbl"><thead><tr><th>Тэмдэглэгээ</th><th>Нэр</th><th>Тайлбар</th></tr></thead><tbody><tr><td style="text-align:center"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="42" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="28" x2="68" y2="10" stroke="#333" stroke-width="2.5"/><line x1="42" y1="42" x2="68" y2="60" stroke="#333" stroke-width="2.5"/><polygon points="66,50 58,40 52,46" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">Б</text><text x="72" y="12" font-size="10" fill="#e74c3c">К</text><text x="72" y="66" font-size="10" fill="#27ae60">Э</text></svg></td><td><b>Биполяр n-p-n</b></td><td>Гүйдлээр удирдагдана: I<sub>К</sub> = β·I<sub>Б</sub>. Хамгийн түгээмэл. Ж: BC547, 2N2222, КТ315.</td></tr><tr><td style="text-align:center"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="42" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="28" x2="68" y2="10" stroke="#333" stroke-width="2.5"/><line x1="42" y1="42" x2="68" y2="60" stroke="#333" stroke-width="2.5"/><polygon points="54,42 62,52 56,52" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">Б</text><text x="72" y="12" font-size="10" fill="#e74c3c">К</text><text x="72" y="66" font-size="10" fill="#27ae60">Э</text></svg></td><td><b>Биполяр p-n-p</b></td><td>n-p-n-ийн туйл эсрэг. Эмиттер гүйдэл дотогш. Ж: BC557, 2N2907, КТ361.</td></tr><tr><td style="text-align:center"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="38" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="20" x2="70" y2="20" stroke="#333" stroke-width="2.5"/><line x1="70" y1="20" x2="70" y2="8" stroke="#333" stroke-width="2.5"/><line x1="42" y1="50" x2="70" y2="50" stroke="#333" stroke-width="2.5"/><line x1="70" y1="50" x2="70" y2="62" stroke="#333" stroke-width="2.5"/><polygon points="26,35 36,30 36,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="12" font-size="10" fill="#e74c3c">С</text><text x="76" y="66" font-size="10" fill="#27ae60">И</text></svg></td><td><b>JFET (n-суваг)</b></td><td>Хүчдэлээр удирдагдана; U<sub>ЗИ</sub> < 0 сувгийг нарийсгана. Өндөр оролтын эсэргүүцэл. Ж: 2N5457, BF245.</td></tr><tr><td style="text-align:center"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="38" y2="35" stroke="#333" stroke-width="2.5"/><line x1="42" y1="15" x2="42" y2="55" stroke="#333" stroke-width="4"/><line x1="42" y1="20" x2="70" y2="20" stroke="#333" stroke-width="2.5"/><line x1="70" y1="20" x2="70" y2="8" stroke="#333" stroke-width="2.5"/><line x1="42" y1="50" x2="70" y2="50" stroke="#333" stroke-width="2.5"/><line x1="70" y1="50" x2="70" y2="62" stroke="#333" stroke-width="2.5"/><polygon points="40,35 30,30 30,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="12" font-size="10" fill="#e74c3c">С</text><text x="76" y="66" font-size="10" fill="#27ae60">И</text></svg></td><td><b>JFET (p-суваг)</b></td><td>n-сувгийн эсрэг туйлт. Ж: 2N5460, J176.</td></tr><tr><td style="text-align:center"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="36" y2="35" stroke="#333" stroke-width="2.5"/><line x1="36" y1="15" x2="36" y2="55" stroke="#333" stroke-width="2.5"/><line x1="44" y1="14" x2="44" y2="24" stroke="#333" stroke-width="4"/><line x1="44" y1="30" x2="44" y2="40" stroke="#333" stroke-width="4"/><line x1="44" y1="46" x2="44" y2="56" stroke="#333" stroke-width="4"/><line x1="44" y1="19" x2="70" y2="19" stroke="#333" stroke-width="2.5"/><line x1="70" y1="19" x2="70" y2="6" stroke="#333" stroke-width="2.5"/><line x1="44" y1="51" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><line x1="70" y1="51" x2="70" y2="64" stroke="#333" stroke-width="2.5"/><line x1="44" y1="35" x2="70" y2="35" stroke="#333" stroke-width="2.5"/><line x1="70" y1="35" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><polygon points="52,35 62,30 62,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="10" font-size="10" fill="#e74c3c">С</text><text x="76" y="68" font-size="10" fill="#27ae60">И</text></svg></td><td><b>MOSFET (n-суваг, индуцирсэн)</b></td><td>Тусгаарлагдсан затвор; U<sub>ЗИ</sub> > U<sub>th</sub> үед нээгдэнэ. Чадлын электроник, тоон хэлхээ. Ж: IRF540, 2N7000.</td></tr><tr><td style="text-align:center"><svg viewBox="0 0 110 70" width="110" height="70"><line x1="10" y1="35" x2="36" y2="35" stroke="#333" stroke-width="2.5"/><line x1="36" y1="15" x2="36" y2="55" stroke="#333" stroke-width="2.5"/><line x1="44" y1="14" x2="44" y2="24" stroke="#333" stroke-width="4"/><line x1="44" y1="30" x2="44" y2="40" stroke="#333" stroke-width="4"/><line x1="44" y1="46" x2="44" y2="56" stroke="#333" stroke-width="4"/><line x1="44" y1="19" x2="70" y2="19" stroke="#333" stroke-width="2.5"/><line x1="70" y1="19" x2="70" y2="6" stroke="#333" stroke-width="2.5"/><line x1="44" y1="51" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><line x1="70" y1="51" x2="70" y2="64" stroke="#333" stroke-width="2.5"/><line x1="44" y1="35" x2="70" y2="35" stroke="#333" stroke-width="2.5"/><line x1="70" y1="35" x2="70" y2="51" stroke="#333" stroke-width="2.5"/><polygon points="64,35 54,30 54,40" fill="#333"/><text x="8" y="28" font-size="10" fill="#667eea">З</text><text x="76" y="10" font-size="10" fill="#e74c3c">С</text><text x="76" y="68" font-size="10" fill="#27ae60">И</text></svg></td><td><b>MOSFET (p-суваг)</b></td><td>n-сувгийн эсрэг туйлт; CMOS-ийн хос элемент. Ж: IRF9540, BS250.</td></tr></tbody></table></div>
+                </div>
+                <div class="section">
+                    <h2>Корпус ба хөлний байрлал</h2>
+                    <div class="diagram-box">
+                        <svg width="100%" viewBox="0 0 700 200" style="max-width:700px;height:auto;">
+                            <g transform="translate(60,20)"><path d="M0 60 A50 50 0 0 1 100 60 L100 100 L0 100 Z" fill="#222"/><line x1="0" y1="100" x2="100" y2="100" stroke="#999" stroke-width="3"/><text x="50" y="80" font-size="11" fill="#fff" text-anchor="middle">BC547</text>
+                                <line x1="20" y1="100" x2="20" y2="150" stroke="#999" stroke-width="3"/><line x1="50" y1="100" x2="50" y2="150" stroke="#999" stroke-width="3"/><line x1="80" y1="100" x2="80" y2="150" stroke="#999" stroke-width="3"/>
+                                <text x="20" y="168" font-size="11" fill="#333" text-anchor="middle">К</text><text x="50" y="168" font-size="11" fill="#333" text-anchor="middle">Б</text><text x="80" y="168" font-size="11" fill="#333" text-anchor="middle">Э</text>
+                                <text x="50" y="10" font-size="12" fill="#333" text-anchor="middle">TO-92 (хавтгай тал урдаа)</text></g>
+                            <g transform="translate(270,20)"><rect x="0" y="20" width="110" height="80" fill="#222"/><rect x="0" y="0" width="110" height="22" fill="#bbb"/><circle cx="55" cy="11" r="5" fill="#fff"/><text x="55" y="65" font-size="11" fill="#fff" text-anchor="middle">IRF540</text>
+                                <line x1="20" y1="100" x2="20" y2="150" stroke="#999" stroke-width="4"/><line x1="55" y1="100" x2="55" y2="150" stroke="#999" stroke-width="4"/><line x1="90" y1="100" x2="90" y2="150" stroke="#999" stroke-width="4"/>
+                                <text x="20" y="168" font-size="11" fill="#333" text-anchor="middle">З</text><text x="55" y="168" font-size="11" fill="#333" text-anchor="middle">С</text><text x="90" y="168" font-size="11" fill="#333" text-anchor="middle">И</text>
+                                <text x="55" y="-6" font-size="12" fill="#333" text-anchor="middle">TO-220 (радиатор = С)</text></g>
+                            <g transform="translate(480,20)"><rect x="0" y="40" width="90" height="60" fill="#222"/><text x="45" y="75" font-size="10" fill="#fff" text-anchor="middle">1AM</text>
+                                <line x1="15" y1="100" x2="15" y2="125" stroke="#999" stroke-width="4"/><line x1="75" y1="100" x2="75" y2="125" stroke="#999" stroke-width="4"/><line x1="45" y1="40" x2="45" y2="15" stroke="#999" stroke-width="4"/>
+                                <text x="15" y="143" font-size="11" fill="#333" text-anchor="middle">Б</text><text x="75" y="143" font-size="11" fill="#333" text-anchor="middle">Э</text><text x="45" y="10" font-size="11" fill="#333" text-anchor="middle">К</text>
+                                <text x="45" y="168" font-size="12" fill="#333" text-anchor="middle">SOT-23 (SMD)</text></g>
+                            <text x="350" y="195" font-size="11" fill="#c0392b" text-anchor="middle">⚠ Хөлний дараалал загвар бүрт өөр — үргэлж datasheet шалга!</text>
+                        </svg>
+                    </div>
+                    <div class="card">
+                        <h3>Үсэг-тоон тэмдэглэгээ</h3>
+                        <ol>
+                            <li><b>JEDEC:</b> 2N#### — "2" = хоёр шилжилт (транзистор). 2N2222 (npn), 2N3055 (чадлын npn), 2N7000 (MOSFET)</li>
+                            <li><b>Pro Electron:</b> 1-р үсэг материал (A=Ge, B=Si), 2-р үсэг: C=НД бага чадлын, D=НД чадлын, F=ӨД, S=түлхүүр. BC547, BD139, BF199, BS170</li>
+                            <li><b>JIS (Япон):</b> 2SA (pnp ӨД), 2SB (pnp НД), 2SC (npn ӨД), 2SD (npn НД), 2SK (n-FET), 2SJ (p-FET). 2SC1815</li>
+                            <li><b>ГОСТ:</b> КТ (кремний транзистор), ГТ (германий), КП (талбайн). КТ315, КТ361, КТ818, КП303</li>
+                            <li><b>Үйлдвэрийн:</b> IRF### (International Rectifier MOSFET), TIP### (Texas чадлын), MJE###</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4 -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>Дасгал</h2>
+                    <div class="exercise"><p>Дасгал 1. β = 150, I<sub>Б</sub> = 20 мкА. Коллекторын гүйдэл I<sub>К</sub> хэдэн мА вэ?</p><input id="ans1" type="number" step="0.1" placeholder="мА"><button onclick="checkAnswer1()">Хариултаа шалга</button><div id="feedback1"></div></div>
+                    <div class="exercise"><p>Дасгал 2. I<sub>К</sub> = 4.95 мА, I<sub>Б</sub> = 0.05 мА. Эмиттерийн гүйдэл I<sub>Э</sub> хэдэн мА вэ?</p><input id="ans2" type="number" step="0.01" placeholder="мА"><button onclick="checkAnswer2()">Хариултаа шалга</button><div id="feedback2"></div></div>
+                    <div class="exercise"><p>Дасгал 3. Өсгөгч горимд n-p-n транзисторын шилжилтүүд хэрхэн холбогдох вэ?</p><select id="ans3"><option value="">Сонгоно уу...</option><option value="wrong">ЭБ урвуу, БК шууд</option><option value="correct">ЭБ шууд, БК урвуу</option><option value="wrong">Хоёулаа шууд</option><option value="wrong">Хоёулаа урвуу</option></select><button onclick="checkAnswer3()">Хариултаа шалга</button><div id="feedback3"></div></div>
+                    <div class="exercise"><p>Дасгал 4. U<sub>тэж</sub> = 12 В, R<sub>К</sub> = 2 кОм, I<sub>К</sub> = 3 мА. U<sub>КЭ</sub> хэдэн В вэ?</p><input id="ans4" type="number" step="0.1" placeholder="В"><button onclick="checkAnswer4()">Хариултаа шалга</button><div id="feedback4"></div></div>
+                    <div class="exercise"><p>Дасгал 5. Аль транзистор хамгийн өндөр оролтын эсэргүүцэлтэй вэ?</p><select id="ans5"><option value="">Сонгоно уу...</option><option value="wrong">Биполяр n-p-n</option><option value="wrong">JFET</option><option value="correct">MOSFET</option></select><button onclick="checkAnswer5()">Хариултаа шалга</button><div id="feedback5"></div></div>
+                </div>
+            </div>
+
+            <!-- TAB 5 -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2>Шалгалтын асуултууд</h2>
+                    <p class="text">Бүх асуултад хариулаад "Шалгалтыг өгөх" товчийг дарна уу. Оноо багшид автоматаар бүртгэгдэнэ.</p>
+                    <div id="quizBox"></div>
+                    <button class="submit-btn" onclick="submitQuiz()">Шалгалтыг өгөх</button>
+                    <div id="quizResult"></div>
+                </div>
+            </div>
+
+            <!-- TAB 6: Teacher -->
+            <div class="tab-content" id="teacherTab">
+                <div class="section">
+                    <h2>Багшийн самбар — оюутны бүртгэл, зарцуулсан хугацаа, шалгалтын оноо</h2>
+                    <div id="teacherStats"></div>
+                    <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <input id="tSearch" type="text" placeholder="Код эсвэл нэрээр хайх..." oninput="renderTeacher()" style="flex:1;min-width:200px;padding:8px;border:1px solid #ddd;border-radius:4px;font-family:inherit;">
+                        <button onclick="exportCSV()" style="padding:8px 14px;background:#27ae60;color:#fff;border:none;border-radius:4px;cursor:pointer;">⬇ CSV татах</button>
+                        <button onclick="renderTeacher()" style="padding:8px 14px;background:#667eea;color:#fff;border:none;border-radius:4px;cursor:pointer;">↻ Шинэчлэх</button>
+                    </div>
+                    <div class="tbl-wrap">
+                        <table class="tbl">
+                            <thead><tr><th>#</th><th>Код</th><th>Овог нэр</th><th>Сургууль</th><th>Нэвтэрсэн (удаа)</th><th>Нийт хугацаа</th><th>Сүүлд нэвтэрсэн</th><th>Шалгалтын оноо</th><th>Шалгалт өгсөн огноо</th></tr></thead>
+                            <tbody id="teacherBody"></tbody>
+                        </table>
+                    </div>
+                    <p class="hint" style="margin-top:10px;">Сервер (API_URL) тохируулсан бол бүх төхөөрөмжийн бүртгэл Google Sheets-д төвлөрч, багш хаанаас ч харна. Тохируулаагүй бол зөвхөн энэ төхөөрөмжийн localStorage.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Транзисторуудын интерактив дасгал | by Batgerel M.EC21</p>
+        </div>
+    </div>
+
+    <script>
+        // ===== Оюутны жагсаалт (I.ETM201, кодоос B үсгийг хассан) =====
+        const ROSTER = {"222130033": {"n": "О.ЭРДЭМБИЛГҮҮН", "s": "ЭХИС"}, "222130045": {"n": "Э.ТЭМҮҮЛЭН", "s": "ЭХИС"}, "222130061": {"n": "Я.ТӨРМӨНХ", "s": "ЭХИС"}, "222130124": {"n": "Д.ЭНХХҮСЛЭН", "s": "ЭХИС"}, "232130003": {"n": "Д.ОТГОНДАРЬ", "s": "ЭХИС"}, "232130006": {"n": "Б.ЭРМҮҮНТӨГӨЛДӨР", "s": "ЭХИС"}, "232130025": {"n": "Д.САНЧИРСҮРЭН", "s": "ЭХИС"}, "232130029": {"n": "Т.ӨСӨХБАЯР", "s": "ЭХИС"}, "232130039": {"n": "У.ЭНХТЭМҮҮЛЭН", "s": "ЭХИС"}, "232130067": {"n": "А.ЭНХБААТАР", "s": "ЭХИС"}, "232130138": {"n": "О.ТАМИР", "s": "ЭХИС"}, "233040003": {"n": "Г.БУМБАЯР", "s": "ЭХИС"}, "233040054": {"n": "Б.ӨСӨХ-ИРЭЭДҮЙ", "s": "ЭХИС"}, "242130013": {"n": "Д.ГОМБОСҮРЭН", "s": "ЭХИС"}, "242130050": {"n": "Б.ДАВААЖАРГАЛ", "s": "ЭХИС"}, "242130071": {"n": "Б.ГАЛ-ЭРДЭНЭ", "s": "ЭХИС"}, "242130103": {"n": "Ө.ЦЭЦБИЛЭГ", "s": "ЭХИС"}, "242130520": {"n": "А.ХАНТӨМӨР", "s": "ЭХИС"}, "243040003": {"n": "Б.ХҮРЭЛБААТАР", "s": "ЭХИС"}, "243040013": {"n": "М.ДӨЛГӨӨН", "s": "ЭХИС"}, "243040023": {"n": "Э.МӨНХЦАЦРАЛ", "s": "ЭХИС"}, "243040028": {"n": "Т.ЦЭЦЭГБАЯР", "s": "ЭХИС"}, "243040042": {"n": "Д.АНХБАЯР", "s": "ЭХИС"}, "244410001": {"n": "Б.ЭРХЭМБАЯР", "s": "ЭХИС"}, "252130003": {"n": "Л.ОТГОНТӨГС", "s": "ЭХИС"}, "252130009": {"n": "Б.ЭНХТҮВШИН", "s": "ЭХИС"}, "252130012": {"n": "Ж.НОМИНЗУЛ", "s": "ЭХИС"}, "252130014": {"n": "Г.МАРАЛ", "s": "ЭХИС"}, "252130015": {"n": "А.УЛАМБАТ", "s": "ЭХИС"}, "252130019": {"n": "Ж.ХУВЬТӨГӨЛДӨР", "s": "ЭХИС"}, "252130022": {"n": "Б.ТӨГӨЛДӨР", "s": "ЭХИС"}, "252130024": {"n": "Х.БУЯННЭМЭХ", "s": "ЭХИС"}, "252130026": {"n": "Н.АЛТАНТӨГС", "s": "ЭХИС"}, "252130027": {"n": "М.ЭНХМӨНХ", "s": "ЭХИС"}, "252130031": {"n": "О.БАТЗОРИГ", "s": "ЭХИС"}, "252130038": {"n": "М.МАРГАД", "s": "ЭХИС"}, "252130042": {"n": "Д.АЛТАНСҮХ", "s": "ЭХИС"}, "252130045": {"n": "С.МЯГМАРДОРЖ", "s": "ЭХИС"}, "252130052": {"n": "Б.АМГАЛАН", "s": "ЭХИС"}, "252130053": {"n": "Ц.БАТЦЭРЭН", "s": "ЭХИС"}, "252130059": {"n": "У.ЖАВХЛАНТӨГС", "s": "ЭХИС"}, "252130074": {"n": "А.МӨНХ-ЭРДЭНЭ", "s": "ЭХИС"}, "252130079": {"n": "Б.БАНЗРАГЧ", "s": "ЭХИС"}, "252130084": {"n": "М.БОЛОРЧИМЭГ", "s": "ЭХИС"}, "252130085": {"n": "Т.ӨНӨБОЛД", "s": "ЭХИС"}, "252130093": {"n": "Г.МЯГМАРДОРЖ", "s": "ЭХИС"}, "252130095": {"n": "Ж.ХАШ-ЭРДЭНЭ", "s": "ЭХИС"}, "252130096": {"n": "Г.ЦЭНДЖАВ", "s": "ЭХИС"}, "252130103": {"n": "Д.БИЛГҮҮН", "s": "ЭХИС"}, "252130106": {"n": "Д.ГАНБАЯР", "s": "ЭХИС"}, "252130144": {"n": "Н.ДӨЛГӨӨН", "s": "ЭХИС"}, "252130145": {"n": "Т.ДЭЛГЭРМАА", "s": "ЭХИС"}, "252130156": {"n": "Б.ЛХАГВАЗАЯА", "s": "ЭХИС"}, "252130168": {"n": "Б.МАНДАХБАЯР", "s": "ЭХИС"}, "252130169": {"n": "С.ПҮРЭВСҮРЭН", "s": "ЭХИС"}, "252130513": {"n": "Н.ЖАНЛАВЦОГЗОЛ", "s": "ЭХИС"}, "253040002": {"n": "М.НЯМБАЯР", "s": "ЭХИС"}, "253040004": {"n": "Ц.ЖАРГАЛМАА", "s": "ЭХИС"}, "253040008": {"n": "Ч.БИЛГҮҮН", "s": "ЭХИС"}, "253040013": {"n": "С.АРИУН-ЭРДЭНЭ", "s": "ЭХИС"}, "253040016": {"n": "Ц.БАТЦЭНГЭЛ", "s": "ЭХИС"}, "253040018": {"n": "М.УЯНГА", "s": "ЭХИС"}, "253040019": {"n": "У.УЯНГА", "s": "ЭХИС"}, "253040020": {"n": "О.БАДАМДОРЖ", "s": "ЭХИС"}, "253040028": {"n": "Б.МӨНХТУЯА", "s": "ЭХИС"}, "253040031": {"n": "Д.ДӨЛГӨӨН", "s": "ЭХИС"}, "253040034": {"n": "А.МӨНХ-ОРГИЛ", "s": "ЭХИС"}, "253040035": {"n": "Э.ЭНХТӨГӨЛДӨР", "s": "ЭХИС"}, "253040038": {"n": "Э.ШИНЭ-ОД", "s": "ЭХИС"}, "253040040": {"n": "Я.СОДГЭРЭЛ", "s": "ЭХИС"}, "253040041": {"n": "З.МАРАЛМАА", "s": "ЭХИС"}, "253040058": {"n": "А.ЭНХЖИН", "s": "ЭХИС"}, "253041006": {"n": "Б.МИЧИД", "s": "ЭХИС"}, "253041015": {"n": "М.БИЛЭГДАЛАЙ", "s": "ЭХИС"}, "253041018": {"n": "М.ЧОЙБИЛИГ", "s": "ЭХИС"}, "253041019": {"n": "Т.ҮҮРИЙНТУЯА", "s": "ЭХИС"}, "253041020": {"n": "А.ХАНГАЛ", "s": "ЭХИС"}, "253041022": {"n": "Г.ХҮСЛЭН", "s": "ЭХИС"}, "253041024": {"n": "О.БИЛГҮҮН", "s": "ЭХИС"}, "253041036": {"n": "Б.ТҮВШИН", "s": "ЭХИС"}, "254410001": {"n": "Б.ГОНЧИГДОРЖ", "s": "ЭХИС"}};
+        const TEACHER = { id: 'M.EC21', pass: '' }; // нууц үгийг сервер (Apps Script) шалгана
+        const LESSON = 'ETM201 records 3'; // Google Sheet-ийн хуудасны нэр
+        const LS_KEY = 'I.ETM201:' + LESSON;
+        // ===== СЕРВЕР: Google Apps Script web app URL-ээ доор оруулна =====
+        // Хоосон үлдээвэл зөвхөн энэ төхөөрөмжийн localStorage ашиглана.
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxXATDOwPcnrpARr23gPbbpl7ocQ0si3BWxUYqNReJHTUfX36SFpCzIW-1I39nURO0Rgw/exec';
+        const useServer = () => API_URL.startsWith('https://');
+
+        let currentUser = null, sessionStart = null, tickTimer = null, lastTick = null, pendingSec = 0, syncTimer = null;
+        let serverRecords = {};
+
+        function loadRecords() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { return {}; } }
+        function saveRecords(r) { localStorage.setItem(LS_KEY, JSON.stringify(r)); }
+        function fmt(sec) { sec = Math.floor(sec || 0); const h = String(Math.floor(sec / 3600)).padStart(2, '0'), m = String(Math.floor(sec % 3600 / 60)).padStart(2, '0'), s = String(sec % 60).padStart(2, '0'); return h + ':' + m + ':' + s; }
+        function fmtDate(ts) { return ts ? new Date(Number(ts)).toLocaleString('mn-MN') : '—'; }
+
+        async function api(params) {
+            if (!useServer()) return null;
+            params.lesson = LESSON;
+            const url = API_URL + '?' + new URLSearchParams(params).toString();
+            try { const r = await fetch(url, { method: 'GET', redirect: 'follow' }); return await r.json(); }
+            catch (e) { console.warn('API error', e); return null; }
+        }
+
+        function loginMode(i) {
+            document.getElementById('studentLogin').style.display = i === 0 ? '' : 'none';
+            document.getElementById('teacherLogin').style.display = i === 1 ? '' : 'none';
+            document.getElementById('lt0').classList.toggle('active', i === 0);
+            document.getElementById('lt1').classList.toggle('active', i === 1);
+            document.getElementById('loginErr').textContent = '';
+        }
+
+        async function studentLogin() {
+            let code = document.getElementById('stuCode').value.trim().toUpperCase().replace(/^B/, '');
+            const err = document.getElementById('loginErr');
+            if (!/^\d+$/.test(code)) { err.textContent = 'Зөвхөн тоо оруулна уу (B үсэггүй).'; return; }
+            if (!ROSTER[code]) { err.textContent = 'Энэ код I.ETM201 хичээлийн жагсаалтад байхгүй байна.'; return; }
+            currentUser = { role: 'student', code, name: ROSTER[code].n, school: ROSTER[code].s };
+            const rec = loadRecords();
+            rec[code] = rec[code] || { total: 0, logins: 0 };
+            rec[code].logins++; rec[code].last = Date.now();
+            saveRecords(rec);
+            if (useServer()) {
+                err.textContent = 'Сервертэй холбогдож байна...';
+                const res = await api({ action: 'login', code, name: ROSTER[code].n, school: ROSTER[code].s });
+                if (res && res.ok) { rec[code].total = Number(res.total) || rec[code].total; saveRecords(rec); }
+                err.textContent = '';
+            }
+            enter();
+        }
+
+        async function teacherLogin() {
+            const id = document.getElementById('tId').value.trim(), p = document.getElementById('tPass').value;
+            const err = document.getElementById('loginErr');
+            if (useServer()) {
+                err.textContent = 'Шалгаж байна...';
+                const res = await api({ action: 'teacher', id, pass: p });
+                if (!res || !res.ok) { err.textContent = res ? 'ID эсвэл нууц үг буруу байна.' : 'Сервертэй холбогдож чадсангүй.'; return; }
+                serverRecords = res.records || {};
+            } else if (id !== TEACHER.id || p !== TEACHER.pass) { err.textContent = 'ID эсвэл нууц үг буруу байна.'; return; }
+            err.textContent = '';
+            currentUser = { role: 'teacher', code: TEACHER.id, name: 'Т.Батгэрэл (багш)', pass: p };
+            enter();
+        }
+
+        function enter() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('userInfo').innerHTML = (currentUser.role === 'teacher' ? '👩‍🏫 ' : '🎓 ') + '<b>' + currentUser.name + '</b> (' + currentUser.code + ')' + (useServer() ? ' <span style="opacity:.8">☁ сервер</span>' : ' <span style="opacity:.8">💾 локал</span>');
+            document.getElementById('teacherTabBtn').style.display = currentUser.role === 'teacher' ? '' : 'none';
+            sessionStart = Date.now(); lastTick = sessionStart; pendingSec = 0;
+            const rec = loadRecords();
+            document.getElementById('totalTime').textContent = fmt(currentUser.role === 'student' ? rec[currentUser.code].total : 0);
+            clearInterval(tickTimer); clearInterval(syncTimer);
+            tickTimer = setInterval(tick, 1000);
+            if (useServer() && currentUser.role === 'student') syncTimer = setInterval(syncTime, 30000);
+            if (currentUser.role === 'teacher') { renderTeacher(); switchTab(6); } else switchTab(0);
+        }
+
+        function tick() {
+            const now = Date.now();
+            document.getElementById('sessionTime').textContent = fmt((now - sessionStart) / 1000);
+            if (currentUser && currentUser.role === 'student' && !document.hidden) {
+                const d = (now - lastTick) / 1000;
+                const rec = loadRecords();
+                rec[currentUser.code].total += d; pendingSec += d;
+                saveRecords(rec);
+                document.getElementById('totalTime').textContent = fmt(rec[currentUser.code].total);
+            }
+            lastTick = now;
+        }
+        function syncTime() {
+            if (!currentUser || currentUser.role !== 'student' || pendingSec < 1) return;
+            const s = Math.round(pendingSec); pendingSec = 0;
+            api({ action: 'tick', code: currentUser.code, sec: s });
+        }
+        document.addEventListener('visibilitychange', () => { lastTick = Date.now(); if (document.hidden) syncTime(); });
+        window.addEventListener('beforeunload', () => { if (useServer() && pendingSec >= 1 && currentUser) navigator.sendBeacon && fetch(API_URL + '?' + new URLSearchParams({ action: 'tick', lesson: LESSON, code: currentUser.code, sec: Math.round(pendingSec) }), { keepalive: true }); });
+
+        function logout() {
+            syncTime();
+            clearInterval(tickTimer); clearInterval(syncTimer); currentUser = null;
+            document.getElementById('stuCode').value = ''; document.getElementById('tId').value = ''; document.getElementById('tPass').value = '';
+            document.getElementById('sessionTime').textContent = '00:00:00';
+            document.getElementById('loginOverlay').style.display = 'flex';
+        }
+
+        function saveQuizScore(score, max) {
+            if (!currentUser || currentUser.role !== 'student') return;
+            const rec = loadRecords();
+            rec[currentUser.code].quiz = { score, max, at: Date.now() };
+            saveRecords(rec);
+            api({ action: 'quiz', code: currentUser.code, score, max });
+        }
+
+        async function renderTeacher() {
+            let rec = loadRecords();
+            if (useServer() && currentUser && currentUser.role === 'teacher') {
+                const res = await api({ action: 'teacher', id: TEACHER.id, pass: currentUser.pass });
+                if (res && res.ok) { serverRecords = res.records || {}; }
+                rec = serverRecords;
+            }
+            const q = (document.getElementById('tSearch').value || '').trim().toUpperCase();
+            const codes = Object.keys(ROSTER).sort();
+            let rows = '', i = 0, active = 0, quizDone = 0, sumScore = 0;
+            codes.forEach(c => {
+                const r = rec[c] || {}; const s = ROSTER[c];
+                if (Number(r.logins)) active++;
+                if (r.quiz) { quizDone++; sumScore += Number(r.quiz.score); }
+                if (q && !(c.includes(q) || s.n.toUpperCase().includes(q))) return;
+                i++;
+                rows += '<tr><td>' + i + '</td><td>B' + c + '</td><td>' + s.n + '</td><td>' + s.s + '</td><td>' + (r.logins || 0) + '</td><td>' + fmt(r.total) + '</td><td>' + fmtDate(r.last) + '</td><td>' + (r.quiz ? '<b>' + r.quiz.score + '/' + r.quiz.max + '</b>' : '—') + '</td><td>' + (r.quiz ? fmtDate(r.quiz.at) : '—') + '</td></tr>';
+            });
+            document.getElementById('teacherBody').innerHTML = rows || '<tr><td colspan="9">Илэрц олдсонгүй</td></tr>';
+            document.getElementById('teacherStats').innerHTML =
+                '<span class="stat"><b>' + codes.length + '</b>Нийт оюутан</span>' +
+                '<span class="stat"><b>' + active + '</b>Нэвтэрсэн</span>' +
+                '<span class="stat"><b>' + quizDone + '</b>Шалгалт өгсөн</span>' +
+                '<span class="stat"><b>' + (quizDone ? (sumScore / quizDone).toFixed(1) : '—') + '</b>Дундаж оноо (/10)</span>' +
+                (useServer() ? '' : '<div class="hint" style="color:#c0392b;">⚠ Сервер холбогдоогүй: зөвхөн энэ төхөөрөмжийн бүртгэл харагдаж байна. API_URL-ийг тохируулна уу.</div>');
+        }
+
+        function exportCSV() {
+            const rec = useServer() ? serverRecords : loadRecords();
+            let csv = 'Код,Овог нэр,Сургууль,Нэвтэрсэн (удаа),Нийт хугацаа,Сүүлд нэвтэрсэн,Шалгалтын оноо,Шалгалт өгсөн огноо\n';
+            Object.keys(ROSTER).sort().forEach(c => {
+                const r = rec[c] || {}; const s = ROSTER[c];
+                csv += ['B' + c, s.n, s.s, r.logins || 0, fmt(r.total), r.last ? fmtDate(r.last) : '', r.quiz ? r.quiz.score + '/' + r.quiz.max : '', r.quiz ? fmtDate(r.quiz.at) : ''].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',') + '\n';
+            });
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'I.ETM201_burtgel_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+        }
+
+        function switchTab(index) {
+            const contents = document.querySelectorAll('.tab-content');
+            const btns = document.querySelectorAll('.tab-btn');
+            contents.forEach(c => c.classList.remove('active'));
+            btns.forEach(b => b.classList.remove('active'));
+            contents[index].classList.add('active');
+            btns[index].classList.add('active');
+        }
+
+
+        // ===== Хичээлийн JS =====
+        const ns = 'http://www.w3.org/2000/svg';
+        const mk = (tag, attrs) => { const el = document.createElementNS(ns, tag); for (const k in attrs) el.setAttribute(k, attrs[k]); return el; };
+        const BETA = 100;
+
+        // --- BJT анимаци ---
+        function drawBJT() {
+            const ib = +document.getElementById('ibSlider').value, ic = ib * BETA / 1000;
+            document.getElementById('ibVal').textContent = ib; document.getElementById('icVal').textContent = ic.toFixed(1);
+            const g = document.getElementById('bjtCarriers'); g.innerHTML = '';
+            const n = Math.round(ib / 5);
+            for (let i = 0; i < n; i++) {
+                const y = 75 + (i * 37) % 150, dur = 2 + (i % 3) * 0.4;
+                const e = mk('circle', { r: 4, fill: '#f1c40f' });
+                const toBase = i % 25 === 3; // ~4% рекомбинацлана
+                const p = mk('animateMotion', { dur: dur + 's', repeatCount: 'indefinite', begin: (-i * 0.37) + 's', path: toBase ? `M120 ${y} L290 ${y} L290 60` : `M120 ${y} L540 ${y}` });
+                e.appendChild(p); g.appendChild(e);
+            }
+            for (let i = 0; i < 4; i++) { const h = mk('circle', { cx: 268 + i * 15, cy: 90 + i * 40, r: 3.5, fill: '#5dade2' }); g.appendChild(h); }
+            const st = document.getElementById('bjtStatus'), md = document.getElementById('bjtMode');
+            [document.getElementById('wEB'), document.getElementById('wC')].forEach(w => w.classList.toggle('bflow', ib > 0));
+            if (ib === 0) { st.textContent = 'Таслалт: IБ = 0 → IК ≈ 0'; md.textContent = 'Таслалт'; }
+            else if (ib >= 90) { st.textContent = 'Ханалт: IК хэлхээгээр хязгаарлагдана, UКЭ ≈ 0.2 В'; md.textContent = 'Ханалт'; }
+            else { st.textContent = 'Идэвхтэй горим: IК = β·IБ = ' + ic.toFixed(1) + ' мА — бага IБ өөрчлөлт → их IК өөрчлөлт (өсгөлт)'; md.textContent = 'Идэвхтэй'; }
+        }
+
+        // --- MOSFET ---
+        function drawMOS() {
+            const v = +document.getElementById('vgsSlider').value, th = 2;
+            document.getElementById('vgsVal').textContent = v.toFixed(1);
+            const ch = document.getElementById('chan'), lbl = document.getElementById('chanLbl'), st = document.getElementById('mosState'), g = document.getElementById('mosE');
+            g.innerHTML = '';
+            if (v <= th) { ch.setAttribute('height', 0); lbl.textContent = ''; st.textContent = 'ХААЛТТАЙ (UЗИ < Uth) — суваг үүсээгүй, IС = 0'; st.style.color = '#c0392b'; return; }
+            const hgt = Math.min(24, 4 + (v - th) * 3); ch.setAttribute('height', hgt); lbl.textContent = 'n-суваг индуцирлэгдэв'; lbl.setAttribute('y', 160 + hgt + 14);
+            st.textContent = 'НЭЭЛТТЭЙ (UЗИ > Uth) — суваг ' + (v > 7 ? 'өргөн' : 'нарийн') + ', IС урсана'; st.style.color = '#27ae60';
+            const n = Math.round((v - th) * 2);
+            for (let i = 0; i < n; i++) { const e = mk('circle', { r: 3.5, fill: '#f1c40f' }); const a = mk('animateMotion', { dur: '1.5s', repeatCount: 'indefinite', begin: (-i * 0.2) + 's', path: `M175 ${164 + (i % 3) * 5} L525 ${164 + (i % 3) * 5}` }); e.appendChild(a); g.appendChild(e); }
+        }
+
+        // --- Гаралтын характеристик ---
+        const cX = v => 70 + v * 50, cY = i => 380 - i * 24; // 0..12 В, 0..15 мА
+        function icOf(ib, vce) { const sat = vce / 0.3; return Math.min(ib * BETA / 1000 * (1 + vce * 0.01), 15) * Math.min(1, sat); }
+        function drawChar() {
+            const ib = +document.getElementById('chIb').value, rc = +document.getElementById('chRc').value;
+            document.getElementById('chIbV').textContent = ib; document.getElementById('chRcV').textContent = rc;
+            const grid = document.getElementById('chGrid'), ticks = document.getElementById('chTicks'), cur = document.getElementById('chCurves');
+            grid.innerHTML = ''; ticks.innerHTML = ''; cur.innerHTML = '';
+            for (let v = 1; v <= 12; v++) { grid.appendChild(mk('line', { x1: cX(v), y1: 20, x2: cX(v), y2: 380, stroke: '#eee' })); const t = mk('text', { x: cX(v), y: 394, 'text-anchor': 'middle' }); t.textContent = v; ticks.appendChild(t); }
+            for (let i = 3; i <= 15; i += 3) { grid.appendChild(mk('line', { x1: 70, y1: cY(i), x2: 680, y2: cY(i), stroke: '#eee' })); const t = mk('text', { x: 62, y: cY(i) + 4, 'text-anchor': 'end' }); t.textContent = i; ticks.appendChild(t); }
+            for (let b = 20; b <= 100; b += 20) {
+                let d = ''; for (let v = 0; v <= 12; v += 0.05) d += (d ? 'L' : 'M') + cX(v).toFixed(1) + ' ' + cY(icOf(b, v)).toFixed(1) + ' ';
+                cur.appendChild(mk('path', { d, fill: 'none', stroke: b === ib ? '#2196F3' : '#9ec5f5', 'stroke-width': b === ib ? 3 : 1.5 }));
+                const t = mk('text', { x: 650, y: cY(icOf(b, 12)) - 4, 'font-size': 10, fill: '#2196F3', 'text-anchor': 'end' }); t.textContent = 'IБ=' + b + 'мкА'; cur.appendChild(t);
+            }
+            const Isc = 12 / rc * 1000; // мА
+            const L = document.getElementById('chLoad'); L.setAttribute('x1', cX(12)); L.setAttribute('y1', cY(0)); L.setAttribute('x2', cX(0)); L.setAttribute('y2', cY(Math.min(Isc, 15)));
+            // ажлын цэг: IC = min(β·IB, Isc), VCE = 12 - IC·RC
+            let ic = ib * BETA / 1000, vce = 12 - ic * rc / 1000, mode = 'Идэвхтэй горим';
+            if (vce < 0.2) { vce = 0.2; ic = (12 - 0.2) / rc * 1000; mode = 'Ханалт'; }
+            if (ib === 0) { ic = 0; vce = 12; mode = 'Таслалт'; }
+            document.getElementById('chIcV').textContent = ic.toFixed(2) + ' мА'; document.getElementById('chVceV').textContent = vce.toFixed(2) + ' В'; document.getElementById('chMode').textContent = mode;
+            const q = document.getElementById('chQ'); q.setAttribute('cx', cX(vce)); q.setAttribute('cy', cY(Math.min(ic, 15)));
+            const ql = document.getElementById('chQl'); ql.setAttribute('x', cX(vce) + 10); ql.setAttribute('y', cY(Math.min(ic, 15)) - 8);
+        }
+
+        // --- Дасгал ---
+        function showFeedback(id, ok, msg) { const fb = document.getElementById(id); fb.className = 'feedback ' + (ok ? 'correct' : 'incorrect'); fb.textContent = (ok ? '✓ Зөв! ' : '✗ Буруу. ') + msg; }
+        function near(v, t, tol) { return Math.abs(v - t) <= tol; }
+        function checkAnswer1() { const ok = near(+document.getElementById('ans1').value, 3, 0.1); showFeedback('feedback1', ok, 'IК = β·IБ = 150 × 0.02 мА = 3 мА'); }
+        function checkAnswer2() { const ok = near(+document.getElementById('ans2').value, 5, 0.02); showFeedback('feedback2', ok, 'IЭ = IК + IБ = 4.95 + 0.05 = 5 мА'); }
+        function checkAnswer3() { const ok = document.getElementById('ans3').value === 'correct'; showFeedback('feedback3', ok, ok ? '' : 'Идэвхтэй (өсгөгч) горим: ЭБ шууд, БК урвуу.'); }
+        function checkAnswer4() { const ok = near(+document.getElementById('ans4').value, 6, 0.2); showFeedback('feedback4', ok, 'UКЭ = Uтэж − IК·RК = 12 − 3·2 = 6 В'); }
+        function checkAnswer5() { const ok = document.getElementById('ans5').value === 'correct'; showFeedback('feedback5', ok, ok ? '' : 'MOSFET-ийн затвор тусгаарлагдсан тул Rвх ~10¹²–10¹⁴ Ом.'); }
+
+        // --- Шалгалт ---
+        const QUIZ = [
+            ['Биполяр транзистор юугаар удирдагддаг вэ?', ['Хүчдэлээр', 'Гүйдлээр', 'Гэрлээр'], 1],
+            ['n-p-n транзисторын тэмдэглэгээнд эмиттерийн сум хаашаа чиглэнэ?', ['Дотогш', 'Гадагш', 'Сумгүй'], 1],
+            ['I_К = β·I_Б хамаарал ямар горимд хүчинтэй вэ?', ['Таслалт', 'Ханалт', 'Идэвхтэй'], 2],
+            ['Транзисторын аль муж хамгийн нимгэн вэ?', ['Эмиттер', 'Бааз', 'Коллектор'], 1],
+            ['MOSFET-ийн затвор субстратаас юугаар тусгаарлагдсан бэ?', ['p–n шилжилтээр', 'SiO₂ давхаргаар', 'Металлаар'], 1],
+            ['Эмиттерийн давтагч ямар холболтын схем вэ?', ['Нийтлэг эмиттер', 'Нийтлэг коллектор', 'Нийтлэг бааз'], 1],
+            ['Нийтлэг эмиттерийн схемд гаралтын дохионы фаз оролттой харьцуулахад:', ['Ижил (0°)', 'Эсрэг (180°)', '90°'], 1],
+            ['Транзисторыг түлхүүр болгон ашиглахад ямар хоёр горим хэрэглэнэ?', ['Идэвхтэй ба урвуу', 'Таслалт ба ханалт', 'Идэвхтэй ба ханалт'], 1],
+            ['2N3055 тэмдэглэгээний "2N" юуг заадаг вэ?', ['2 Ампер', 'Хоёр p–n шилжилт', 'Хоёрдугаар үе'], 1],
+            ['JFET-ийн сувгийг нарийсгахын тулд n-сувагт затворт ямар хүчдэл өгөх вэ?', ['Эерэг', 'Сөрөг', 'Тэг'], 1],
+        ];
+        function buildQuiz() {
+            document.getElementById('quizBox').innerHTML = QUIZ.map((q, i) => '<div class="quiz-section"><div class="quiz-q">' + (i + 1) + '. ' + q[0] + '</div><div class="quiz-opts">' +
+                q[1].map((o, j) => '<label class="quiz-opt"><input type="radio" name="q' + i + '" value="' + j + '"> ' + o + '</label>').join('') + '</div></div>').join('');
+        }
+        function submitQuiz() {
+            let correct = 0;
+            for (let i = 0; i < QUIZ.length; i++) { const s = document.querySelector('input[name="q' + i + '"]:checked'); if (!s) { alert('Бүх асуултанд хариулна уу! (' + (i + 1) + '-р асуулт)'); return; } if (+s.value === QUIZ[i][2]) correct++; }
+            saveQuizScore(correct, QUIZ.length);
+            const pct = correct / QUIZ.length;
+            document.getElementById('quizResult').innerHTML = '<div class="score-display"><div class="score-number">' + correct + '/' + QUIZ.length + '</div><div class="score-message">' + (pct === 1 ? 'Маш сайн! Бүгд зөв.' : pct >= 0.7 ? 'Сайн үр дүн!' : 'Хичээлээ дахин үзээд давтаарай.') + '</div></div>';
+        }
+        document.addEventListener('DOMContentLoaded', () => { drawBJT(); drawMOS(); drawChar(); buildQuiz(); });
+    </script>
+</body>
+</html>
